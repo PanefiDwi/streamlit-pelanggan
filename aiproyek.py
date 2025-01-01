@@ -6,7 +6,7 @@ import numpy as np
 
 st.title("Clustering Pelanggan Menggunakan K-Means")
 #DOWNLOAD FILE CSV
-file_path = r"C:\Users\Thinkpad L13 Yoga\Documents\Aa Gatiari Kuliah\proyek ai\cus_data_bersih.csv"
+file_path = "cus_data_bersih.csv"
 
 @st.cache_data
 def load_file(file_path):
