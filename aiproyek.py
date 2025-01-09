@@ -105,7 +105,7 @@ def tampilan_korelasi_matriks(tfidf_df):
         
         # Membuat heatmap
         st.write("Heatmap Korelasi:")
-        plt.figure(figsize=(10, 8))
+        plt.figure(figsize=(20, 12))
         sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', cbar=True)
         plt.title('Korelasi Matriks TF-IDF')
         
