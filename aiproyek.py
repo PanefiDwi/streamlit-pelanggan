@@ -114,8 +114,8 @@ def tampilan_korelasi_matriks(tfidf_df):
         plt.close()
     except Exception as e:
         st.error(f"Terjadi kesalahan: {e}")
-
-#FUNGSI MEMILIH FITUR
+        
+#FUNGSI MEMILIH FITUR REV
 def pilih_fitur(df):
     if df is not None:
         st.write("Pilih fitur untuk pengelompokan:")
@@ -123,14 +123,20 @@ def pilih_fitur(df):
         fitur1 = st.selectbox("Pilih fitur pertama (untuk rata-rata) sebagai monetary value:", df.columns)
         fitur2 = st.selectbox("Pilih fitur kedua (untuk jumlah unik) sebagai frekuensi:", df.columns)
         fitur3 = st.selectbox("Pilih fitur ketiga (untuk rata-rata) sebagai kepuasan pelanggan (satisfaction):", df.columns)
-        
+
         st.write(f"Fitur yang dipilih:\n- Fitur utama: {fitur_main}\n- Fitur 1: {fitur1}\n- Fitur 2: {fitur2}\n- Fitur 3: {fitur3}")
         st.warning("Pastikan fitur input sudah sesuai")
-        return fitur_main, fitur1, fitur2, fitur3
+        
+        # Tombol untuk melanjutkan
+        if st.button("Selanjutnya"):
+            st.success("Melanjutkan ke proses pembuatan kriteria pengelompokan...")
+            return fitur_main, fitur1, fitur2, fitur3
+
+        return None, None, None, None  # Tidak ada fitur yang dipilih jika tombol tidak ditekan
     else:
         st.warning("Tidak ada data untuk memilih fitur.")
         return None, None, None, None
-
+        
 #FUNGSI OPERASI FITUR
 def membuat_kriteria_pengelompokan(df, fitur_main, fitur1, fitur2, fitur3):
     st.write(f"Memulai pengelompokan dengan fitur:\n- {fitur_main}, {fitur1}, {fitur2}, {fitur3}")
