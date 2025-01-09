@@ -33,22 +33,22 @@ def upload_csv_file():
     else:
         st.warning("Silakan unggah file CSV terlebih dahulu.")
         return None
-
-#FUNGSI MENGHITUNG TF-IDF
-def tf_idf(df, text_column='product_category'):
-    if text_column not in df.columns:
-        st.error(f"Kolom '{text_column}' tidak ada dalam dataset. Ganti dengan nama kolom teks yang benar.")
+#FUNGSI TF IDF REV (ALL SHOW)
+def tf_idf(df, text_columns):
+    missing_columns = [col for col in text_columns if col not in df.columns]
+    if missing_columns:
+        st.error(f"Kolom berikut tidak ada dalam dataset: {missing_columns}. Ganti dengan nama kolom yang benar.")
         return None
 
-    st.write(f"Menghitung TF-IDF untuk kolom: {text_column}")
-    # Tokenisasi
-    df['tokenized'] = df[text_column].fillna("").apply(lambda x: x.lower().split())
+    st.write(f"Menghitung TF-IDF untuk kolom: {text_columns}")
+    df['combined_text'] = df[text_columns].fillna("").apply(lambda x: " ".join(x.astype(str)), axis=1)
 
-    # Membuat kosakata
+    df['tokenized'] = df['combined_text'].apply(lambda x: x.lower().split())
+
     vocabulary = set(word for tokens in df['tokenized'] for word in tokens)
     vocabulary = sorted(vocabulary)
+    # st.write(f"Jumlah kata unik (vocabulary): {len(vocabulary)}")
 
-    # Fungsi menghitung TF
     def compute_tf(tokens, vocabulary):
         tf = dict.fromkeys(vocabulary, 0)
         total_words = len(tokens)
@@ -76,8 +76,6 @@ def tf_idf(df, text_column='product_category'):
 
     # Menghitung IDF
     idf = {word: np.log(total_docs / (1 + df_count[word])) for word in vocabulary}
-
-    # Fungsi menghitung TF-IDF
     def compute_tfidf(tf, idf):
         return {word: tf[word] * idf[word] for word in tf}
 
@@ -91,7 +89,7 @@ def tf_idf(df, text_column='product_category'):
     st.dataframe(df_combined.head())
 
     return df_combined
-
+    
 #FUNGSI MENAMPILKAN KORELASI MATRIKS
 def tampilan_korelasi_matriks(tfidf_df):
     try:
@@ -482,7 +480,8 @@ def distribusi_klaster(full_clustering_df):
 def tampilan_widget():
     df = upload_csv_file()
     if df is not None:
-        tfidf_result = tf_idf(df)
+        text_column = ['gender', 'education', 'region', 'loyalty_status', 'purchase_frequency', 'product_category']
+        tfidf_result = tf_idf(df, text_column)
         if tfidf_result is not None:
             tampilan_korelasi_matriks(tfidf_result)
 
